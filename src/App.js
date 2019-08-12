@@ -16,18 +16,44 @@ function App() {
 	const [cart, setCart] = useState([]);
 
 	const addItem = item => {
-		setCart([...cart, item]);
+
+		const isInCart = cart.find( el => el.id === item.id)
+
+		isInCart ? item.quantity += 1 
+		:  setCart([...cart, item])
+			item.quantity += 1;
+
 	};
 
 	const removeItem = props => {
-		let updatedCart = cart.filter( el => el.id !== props.id)
+
+
+		let updatedCart = cart.filter( el => { return el.id !== props.id})
+
 		setCart([...updatedCart])
+
 	}
+
+	const setQuantity = (props, event) => {
+		let updatedArr = []
+		
+		if (event.target.className === 'add'){
+			
+			updatedArr = cart.map( item => item.id === props.id ? {...item, quantity : item.quantity + 1} : item )
+
+		} else {
+
+			updatedArr = cart.map( item => item.id === props.id ? {...item, quantity : item.quantity - 1} : item )
+
+		}
+		
+		setCart([...updatedArr])
+}
 
 
 	return (
 		<ProductContext.Provider value={{ products, addItem }}>
-			<CartContext.Provider value = {{ cart, removeItem }}>
+			<CartContext.Provider value = {{ cart, removeItem, setQuantity }}>
 				<div className="App">
 					<Navigation />
 					{/* Routes */}
